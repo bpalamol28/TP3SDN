@@ -983,3 +983,15 @@ pre .support.value  {
 .port-stats:checked ~ .port-stats, .flow-stats:checked ~ .flow-stats {
     display: block;
 }
+
+div.flow-stats {
+    height:auto;
+    max-height:150%;
+    overflow:auto;
+}
+
+#hola {
+    height: 100px;
+    width: 100px;
+    background-color: grey;
+}

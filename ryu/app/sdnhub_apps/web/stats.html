@@ -95,6 +95,7 @@
              <h2>Flow Statistics</h2>
              <button style="float:right;" type="submit" class="pure-button
                  pure-button-primary" onclick="stopFlowStatsTableRefresh()">Stop refresh</button>
+             <canvas id="typeChart"></canvas>
 
              <table class="pure-table pure-table-bordered">
                  <thead>
@@ -136,9 +137,11 @@
   </div>
 
   <script src="/web/js/jquery.min.js"></script>
+  <script src="/web/js/Chart.bundle.min.js"></script>
   <script src="/web/js/utils.js"></script>
   <script src="/web/js/port-stats.js"></script>
   <script src="/web/js/flow-stats.js"></script>
+
 
   </body>
 </html>

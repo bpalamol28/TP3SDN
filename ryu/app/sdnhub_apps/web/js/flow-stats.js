@@ -15,12 +15,14 @@
 
 var url = "http://" + location.hostname + ":8080";
 var types = {53:"dns", 80:"web", 8080:"web", 443:"web"};
+var myChart;
 
 function updateFlowStats() {
     var statsTableBody = document.getElementById('flow-stats-data');
     while (statsTableBody.firstChild) {
             statsTableBody.removeChild(statsTableBody.firstChild);
     }
+    var graphData = [0, 0, 0];
 
     $.getJSON(url.concat("/stats/switches"), function(switches){
         $.each(switches, function(index, dpid){
@@ -106,13 +108,55 @@ function updateFlowStats() {
 
                         statsTableBody.appendChild(tr);
                         tr = document.createElement('TR');
+
+                        graphData[(tipo=="web"? 0 : (tipo=="dns"? 1:2))] += obj.byte_count;
                     }
                 });
 
                 switchColTd.rowSpan = numFlows;
+                fillGraph(graphData);
             });
         });
     });
+}
+
+function fillGraph(graphData) {
+    var ctx = document.getElementById("typeChart").getContext('2d');
+    if (myChart != null){
+        myChart.destroy();
+    }
+    myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ["web", "dns", "otro"],
+            datasets: [{
+                label: '#Bytes',
+                data: graphData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    myChart.resize();
 }
 
 updateFlowStats();
